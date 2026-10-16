@@ -93,7 +93,9 @@ example database or a different `max_examples`. Explicit edge examples are
 allowed. Keep input tests unchanged between variants and runs.
 
 For later model/prompt comparisons, give each agent only the task contracts,
-schemas, fixture instructions and the same generation budget. Withhold
+table definitions, public function signatures, fixture instructions and the same
+generation budget. The supplied `schema.sql` files also contain the correct
+function implementations: omit those bodies from agent inputs. Withhold
 `faults.json` and `reference/` when generating a candidate suite. Freeze each
 submission before scoring and retain its report. The harness currently scores
 submitted tests; it does not invoke models or provide an isolated agent environment.
