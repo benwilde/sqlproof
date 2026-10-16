@@ -1,0 +1,22 @@
+{
+  "totals": [
+    {"id": "other_accounts", "target": "paid_total", "old": "account_id = p_account", "new": "TRUE", "trigger": "A different account has a paid payment."},
+    {"id": "unpaid_payments", "target": "paid_total", "old": "status = 'paid'", "new": "TRUE", "trigger": "The queried account has a pending or void payment."},
+    {"id": "empty_total", "target": "paid_total", "old": "COALESCE(SUM(amount), 0)", "new": "COALESCE(SUM(amount), 1)", "trigger": "The queried account has no paid payments."}
+  ],
+  "pricing": [
+    {"id": "shipping_boundary", "target": "checkout_total", "old": "p_subtotal >= 100", "new": "p_subtotal > 100", "trigger": "The original subtotal is exactly 100."},
+    {"id": "excess_credit", "target": "checkout_total", "old": "GREATEST(p_subtotal - p_credit, 0)", "new": "(p_subtotal - p_credit)", "trigger": "Credit exceeds the original subtotal."},
+    {"id": "half_cent_rounding", "target": "checkout_total", "old": "ROUND(", "new": "TRUNC(", "trigger": "The unrounded total has a third decimal digit of at least five."}
+  ],
+  "visibility": [
+    {"id": "other_owners", "target": "can_read_note", "old": "p_owner = auth.uid()", "new": "TRUE", "trigger": "A user selects a note owned by someone else."},
+    {"id": "owner_denied", "target": "can_read_note", "old": "p_owner = auth.uid()", "new": "FALSE", "trigger": "An owner selects their own note."},
+    {"id": "anonymous_access", "target": "can_read_note", "old": "p_owner = auth.uid()", "new": "auth.uid() IS NULL OR p_owner = auth.uid()", "trigger": "An anonymous request selects any note."}
+  ],
+  "migration": [
+    {"id": "missing_empty_accounts", "target": "account_report", "old": "LEFT JOIN", "new": "JOIN", "trigger": "An account has no charges."},
+    {"id": "duplicate_amounts", "target": "account_report", "old": "SUM(c.amount)", "new": "SUM(DISTINCT c.amount)", "trigger": "An account has repeated nonzero charge amounts."},
+    {"id": "phantom_entry", "target": "account_report", "old": "COUNT(c.id)", "new": "COUNT(*)", "trigger": "An account has no charges."}
+  ]
+}

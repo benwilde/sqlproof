@@ -49,9 +49,9 @@ jobs:
         with:
           database-url: ${{ env.SQLPROOF_TEST_DATABASE_URL }}
           verbose: 'true'
-      - run: uv run ruff check src/ tests/ examples/
-      - run: uv run pyright
-      - run: uv run mypy src/sqlproof/
+      - run: uv run ruff check src/ tests/ examples/ benchmarks/
+      - run: uv run pyright src/sqlproof benchmarks/sql/runner.py benchmarks/sql/plugin.py benchmarks/sql/__main__.py
+      - run: uv run mypy src/sqlproof/ benchmarks/sql/runner.py benchmarks/sql/plugin.py benchmarks/sql/__main__.py
       - run: uv run pytest --cov=sqlproof --cov-fail-under=94 --cov-report=xml
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11'

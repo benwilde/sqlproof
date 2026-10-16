@@ -87,7 +87,7 @@ packages = ["src/sqlproof"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 testpaths = ["tests"]
 markers = [
   "mutation: meta-tests that score a suite via mutation runs; select with -m mutation",
